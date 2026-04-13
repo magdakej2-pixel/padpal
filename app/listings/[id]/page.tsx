@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { RoomListing } from "@/types";
 
@@ -10,6 +11,8 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
   const { id } = use(params);
   const [listing, setListing] = useState<RoomListing | null>(null);
   const [loading, setLoading] = useState(true);
+  const [contacting, setContacting] = useState(false);
+  const router = useRouter();
   const supabase = createClient();
 
   useEffect(() => {
@@ -212,15 +215,72 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
           </svg>
         </button>
         <button
-          onClick={() => {
-            alert(`Message request sent to ${listing.user_name}! They'll be notified. 💬`);
+          disabled={contacting}
+          onClick={async () => {
+            if (!listing) return;
+            setContacting(true);
+            try {
+              const { data: { user } } = await supabase.auth.getUser();
+              if (!user) { router.push("/verify"); return; }
+              if (user.id === listing.user_id) { alert("This is your own listing!"); setContacting(false); return; }
+
+              // Sort IDs for consistent conversation lookup
+              const ids = [user.id, listing.user_id].sort();
+
+              // Check if conversation already exists
+              const { data: existing } = await supabase
+                .from("conversations")
+                .select("id")
+                .eq("user1_id", ids[0])
+                .eq("user2_id", ids[1])
+                .single();
+
+              let conversationId: string;
+
+              if (existing) {
+                conversationId = existing.id;
+              } else {
+                // Create new conversation
+                const { data: newConv } = await supabase
+                  .from("conversations")
+                  .insert({ user1_id: ids[0], user2_id: ids[1] })
+                  .select("id")
+                  .single();
+                if (!newConv) { alert("Could not start conversation."); setContacting(false); return; }
+                conversationId = newConv.id;
+
+                // Send intro message
+                const introMsg = `Hi! I'm interested in your listing: "${listing.title}" (£${listing.rent_pcm}/mo, ${listing.postcode})`;
+                await supabase.from("messages").insert({
+                  conversation_id: conversationId,
+                  sender_id: user.id,
+                  content: introMsg,
+                });
+                await supabase.from("conversations").update({
+                  last_message: introMsg,
+                  last_message_at: new Date().toISOString(),
+                }).eq("id", conversationId);
+              }
+
+              router.push(`/chats/${conversationId}`);
+            } catch (err) {
+              console.error("Contact error:", err);
+              alert("Something went wrong. Please try again.");
+              setContacting(false);
+            }
           }}
-          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius-lg)] bg-primary font-semibold text-white shadow-[var(--shadow-button)]"
+          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius-lg)] bg-primary font-semibold text-white shadow-[var(--shadow-button)] disabled:opacity-60"
         >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-          </svg>
-          Message {listing.user_name?.split(" ")[0]}
+          {contacting ? (
+            <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="50 14" />
+            </svg>
+          ) : (
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+            </svg>
+          )}
+          {contacting ? "Opening chat..." : `Message ${listing.user_name?.split(" ")[0]}`}
         </button>
       </div>
     </div>
