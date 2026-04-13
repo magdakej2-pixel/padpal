@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import { usePremium } from "@/lib/use-premium";
 import BottomNav from "@/components/BottomNav";
 
 export default function HomePage() {
   const [userName, setUserName] = useState("");
+  const { isPremium } = usePremium();
   const supabase = createClient();
 
   useEffect(() => {
@@ -119,6 +121,36 @@ export default function HomePage() {
             <span className="text-xs font-semibold text-dark">Messages</span>
           </Link>
         </div>
+
+        {/* Search Together */}
+        <Link
+          href={isPremium ? "/search-together" : "/premium"}
+          className="group relative flex items-center gap-3 rounded-[var(--radius-lg)] bg-white p-4 shadow-sm transition-all hover:shadow-md"
+        >
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-[#D4680F] text-white">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-dark">Search Together</span>
+              {!isPremium && (
+                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">PREMIUM</span>
+              )}
+            </div>
+            <p className="text-xs text-muted">Browse homes with your matched flatmate</p>
+          </div>
+          {!isPremium ? (
+            <svg className="h-4 w-4 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          ) : (
+            <svg className="h-4 w-4 text-muted transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          )}
+        </Link>
       </div>
 
       <BottomNav />

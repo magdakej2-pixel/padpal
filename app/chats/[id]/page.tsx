@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, use } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
+import { usePremium } from "@/lib/use-premium";
 
 interface Message {
   id: string;
@@ -30,6 +31,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
   const [partnerId, setPartnerId] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { isPremium } = usePremium();
 
   useEffect(() => {
     const supabase = createClient();
@@ -206,6 +208,21 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
         <div className="flex-1">
           <h2 className="text-base font-semibold text-dark">{partnerName}</h2>
         </div>
+        <Link
+          href={isPremium ? "/search-together" : "/premium"}
+          className="flex h-9 items-center gap-1.5 rounded-full bg-primary-bg px-3 transition-colors hover:bg-primary/20"
+          title="Search Together"
+        >
+          <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+          <span className="text-xs font-semibold text-primary">Search Together</span>
+          {!isPremium && (
+            <svg className="h-3 w-3 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          )}
+        </Link>
       </div>
 
       {/* Messages */}
