@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS messages (
 ALTER TABLE interactions ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own interactions" ON interactions;
 CREATE POLICY "Users can view own interactions" ON interactions
-  FOR SELECT USING (auth.uid() = user_id);
+  FOR SELECT USING (auth.uid() = user_id OR auth.uid() = target_id);
 DROP POLICY IF EXISTS "Users can create interactions" ON interactions;
 CREATE POLICY "Users can create interactions" ON interactions
   FOR INSERT WITH CHECK (auth.uid() = user_id);
