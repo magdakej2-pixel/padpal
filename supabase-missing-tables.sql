@@ -36,12 +36,16 @@ ALTER TABLE listings ADD COLUMN IF NOT EXISTS amenities TEXT[] DEFAULT '{}';
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS photos TEXT[] DEFAULT '{}';
 ALTER TABLE listings ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
 
+-- Fix existing rows where is_active is NULL (from before column was added)
+UPDATE listings SET is_active = true WHERE is_active IS NULL;
+
 ALTER TABLE listings ENABLE ROW LEVEL SECURITY;
 
 -- Listings RLS policies
+-- Owners always see their own listings; everyone sees active ones
 DROP POLICY IF EXISTS "Anyone can view active listings" ON listings;
 CREATE POLICY "Anyone can view active listings" ON listings
-  FOR SELECT USING (is_active = true);
+  FOR SELECT USING (is_active = true OR auth.uid() = user_id);
 
 DROP POLICY IF EXISTS "Users can create own listings" ON listings;
 CREATE POLICY "Users can create own listings" ON listings

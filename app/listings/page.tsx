@@ -29,7 +29,7 @@ export default function ListingsPage() {
       const { data, error } = await supabase
         .from("listings")
         .select(`*, profiles:user_id (name, photos, is_student, occupation, university)`)
-        .eq("is_active", true)
+        .neq("is_active", false)
         .order("created_at", { ascending: false })
         .limit(50);
 
