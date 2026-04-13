@@ -32,11 +32,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid or empty request body" }, { status: 400 });
     }
 
-    const { priceId: rawPriceId, mode, successUrl, cancelUrl } = body;
+    const { priceId: rawPriceId, mode } = body;
     const priceId = rawPriceId?.trim();
 
     // SECURITY: Force userId from authenticated session, not from request body
     const userId = user.id;
+
+    // SECURITY: Validate mode parameter
+    const validModes = ["subscription", "payment"];
+    const checkedMode = validModes.includes(mode) ? mode : "subscription";
 
     if (!priceId) {
       return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
@@ -44,11 +48,14 @@ export async function POST(req: NextRequest) {
 
     console.log("Creating checkout session:", { priceId, userId, mode });
 
+    // SECURITY: Always use server-controlled redirect URLs (prevents open redirect)
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://padpal-xi.vercel.app";
+
     const session = await stripe.checkout.sessions.create({
-      mode: mode || "subscription",
+      mode: checkedMode,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: successUrl || `${process.env.NEXT_PUBLIC_APP_URL || "https://padpal-xi.vercel.app"}/premium?success=true`,
-      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_APP_URL || "https://padpal-xi.vercel.app"}/premium?canceled=true`,
+      success_url: `${appUrl}/premium?success=true`,
+      cancel_url: `${appUrl}/premium?canceled=true`,
       metadata: {
         userId,
         ...(body.boostType && { boostType: body.boostType }),

@@ -32,6 +32,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
 
+    // SECURITY: Verify sender has an active conversation with recipient
+    const admin = getAdmin();
+    const { data: conv } = await admin
+      .from("conversations")
+      .select("id")
+      .or(`and(user1_id.eq.${user.id},user2_id.eq.${userId}),and(user1_id.eq.${userId},user2_id.eq.${user.id})`)
+      .limit(1)
+      .maybeSingle();
+
+    if (!conv) {
+      return NextResponse.json({ error: "No conversation with this user" }, { status: 403 });
+    }
+
     const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
     const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
 
@@ -49,7 +62,6 @@ export async function POST(req: NextRequest) {
     );
 
     // Get user's push subscriptions
-    const admin = getAdmin();
     const { data: subs } = await admin
       .from("push_subscriptions")
       .select("*")

@@ -48,34 +48,42 @@ CREATE TABLE IF NOT EXISTS messages (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. RLS Policies
+-- 5. RLS Policies (drop first to avoid conflicts)
 
--- Interactions: users can only see/create their own
+-- Interactions
 ALTER TABLE interactions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own interactions" ON interactions;
 CREATE POLICY "Users can view own interactions" ON interactions
   FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can create interactions" ON interactions;
 CREATE POLICY "Users can create interactions" ON interactions
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
--- Conversations: users can see conversations they're part of
+-- Conversations
 ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own conversations" ON conversations;
 CREATE POLICY "Users can view own conversations" ON conversations
   FOR SELECT USING (auth.uid() IN (user1_id, user2_id));
+DROP POLICY IF EXISTS "Users can create conversations" ON conversations;
 CREATE POLICY "Users can create conversations" ON conversations
   FOR INSERT WITH CHECK (auth.uid() IN (user1_id, user2_id));
+DROP POLICY IF EXISTS "Users can update own conversations" ON conversations;
 CREATE POLICY "Users can update own conversations" ON conversations
   FOR UPDATE USING (auth.uid() IN (user1_id, user2_id));
 
--- Messages: users can see messages in their conversations
+-- Messages
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view messages in own conversations" ON messages;
 CREATE POLICY "Users can view messages in own conversations" ON messages
   FOR SELECT USING (
     conversation_id IN (
       SELECT id FROM conversations WHERE auth.uid() IN (user1_id, user2_id)
     )
   );
+DROP POLICY IF EXISTS "Users can send messages" ON messages;
 CREATE POLICY "Users can send messages" ON messages
   FOR INSERT WITH CHECK (auth.uid() = sender_id);
+DROP POLICY IF EXISTS "Users can mark messages as read" ON messages;
 CREATE POLICY "Users can mark messages as read" ON messages
   FOR UPDATE USING (
     conversation_id IN (

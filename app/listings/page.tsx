@@ -188,7 +188,7 @@ export default function ListingsPage() {
                 <div className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-bold ${
                   listing.type === "offering"
                     ? "bg-success text-white"
-                    : "bg-blue-500 text-white"
+                    : "bg-primary text-white"
                 }`}>
                   {listing.type === "offering" ? "Room Available" : "Seeking Room"}
                 </div>
@@ -245,7 +245,7 @@ export default function ListingsPage() {
                         </svg>
                       )}
                       {listing.is_student && (
-                        <span className="rounded-full bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
+                        <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
                           STUDENT
                         </span>
                       )}

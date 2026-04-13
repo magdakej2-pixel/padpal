@@ -113,7 +113,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
 
         {/* Type badge */}
         <div className={`absolute right-4 top-4 rounded-full px-3 py-1.5 text-xs font-bold ${
-          listing.type === "offering" ? "bg-success text-white" : "bg-blue-500 text-white"
+          listing.type === "offering" ? "bg-success text-white" : "bg-primary text-white"
         }`}>
           {listing.type === "offering" ? "Room Available" : "Seeking Room"}
         </div>

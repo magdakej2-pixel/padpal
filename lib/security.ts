@@ -4,15 +4,31 @@
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
+// Periodic cleanup of expired entries to prevent memory leaks
+let lastCleanup = Date.now();
+function cleanupExpired() {
+  const now = Date.now();
+  if (now - lastCleanup < 60000) return; // cleanup at most once per minute
+  lastCleanup = now;
+  for (const [key, entry] of rateLimitMap) {
+    if (now > entry.resetAt) rateLimitMap.delete(key);
+  }
+}
+
 /**
  * In-memory rate limiter (per key, default 30 req/min).
  * Returns true if the request should be BLOCKED.
+ * 
+ * TODO: For production on Vercel serverless, consider replacing with
+ * Upstash Redis (@upstash/ratelimit) for persistent cross-instance limiting.
+ * This in-memory approach resets on each cold start.
  */
 export function isRateLimited(
   key: string,
   limit = 30,
   windowMs = 60000
 ): boolean {
+  cleanupExpired();
   const now = Date.now();
   const entry = rateLimitMap.get(key);
   if (!entry || now > entry.resetAt) {

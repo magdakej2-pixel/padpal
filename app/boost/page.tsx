@@ -86,7 +86,7 @@ function BoostContent() {
   return (
     <div className="flex min-h-dvh flex-col bg-white safe-top safe-bottom">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-[#A63828] px-5 pb-8 pt-6">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-[#B85400] px-5 pb-8 pt-6">
         <Link href={backHref} className="mb-4 inline-flex items-center text-sm text-white/70">← Back</Link>
         <div className="relative z-10">
           <h1 className="text-2xl font-bold text-white mb-1">{title}</h1>

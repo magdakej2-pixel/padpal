@@ -402,7 +402,7 @@ export default function DiscoverPage() {
                   {currentCard.profile.university && ` @ ${currentCard.profile.university}`}
                 </p>
                 {currentCard.profile.is_student && (
-                  <span className="rounded-full bg-blue-500/90 px-2 py-0.5 text-[10px] font-bold text-white">
+                  <span className="rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-bold text-white">
                     STUDENT
                   </span>
                 )}

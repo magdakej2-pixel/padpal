@@ -63,9 +63,9 @@ CREATE TABLE IF NOT EXISTS quiz_answers (
 
 ALTER TABLE quiz_answers ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Anyone can view quiz_answers" ON quiz_answers;
-CREATE POLICY "Anyone can view quiz_answers" ON quiz_answers
-  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Authenticated users can view quiz_answers" ON quiz_answers;
+CREATE POLICY "Authenticated users can view quiz_answers" ON quiz_answers
+  FOR SELECT USING (auth.role() = 'authenticated');
 
 DROP POLICY IF EXISTS "Users can create own quiz_answers" ON quiz_answers;
 CREATE POLICY "Users can create own quiz_answers" ON quiz_answers

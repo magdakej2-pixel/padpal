@@ -114,7 +114,7 @@ function PremiumContent() {
   return (
     <div className="flex min-h-dvh flex-col bg-white safe-top safe-bottom">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-[#004D40] px-5 pb-8 pt-6">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-[#B85400] px-5 pb-8 pt-6">
         <Link href="/profile" className="mb-4 inline-flex items-center text-sm text-white/70">← Back</Link>
         <div className="relative z-10">
           <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">PREMIUM</div>

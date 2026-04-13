@@ -14,7 +14,7 @@ const PUBLIC_ROUTES = [
 ];
 
 // Routes that start with these prefixes are public
-const PUBLIC_PREFIXES = ["/api", "/_next", "/favicon", "/icon-", "/manifest"];
+const PUBLIC_PREFIXES = ["/_next", "/favicon", "/icon-", "/manifest"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

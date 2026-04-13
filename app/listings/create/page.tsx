@@ -134,7 +134,7 @@ function CreateListingContent() {
                   listingType === "seeking" ? "border-primary bg-primary-bg" : "border-border hover:border-primary/30"
                 }`}
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-500/10 text-2xl">🔍</div>
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-2xl">🔍</div>
                 <div>
                   <p className="text-base font-semibold text-dark">I&apos;m looking for a room</p>
                   <p className="text-sm text-dark-secondary">Let landlords and flatmates know you&apos;re searching</p>

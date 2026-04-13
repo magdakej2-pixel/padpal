@@ -36,7 +36,7 @@ export default function HomePage() {
         {/* Find a Room */}
         <Link
           href="/listings"
-          className="group relative block overflow-hidden rounded-[var(--radius-xl)] bg-gradient-to-br from-primary to-primary-dark p-6 shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
+          className="group relative block overflow-hidden rounded-[var(--radius-xl)] bg-gradient-to-br from-primary to-[#D4680F] p-6 shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
           style={{ minHeight: "180px" }}
         >
           <div className="relative z-10">
@@ -61,7 +61,7 @@ export default function HomePage() {
         {/* Find a Roommate */}
         <Link
           href="/discover"
-          className="group relative block overflow-hidden rounded-[var(--radius-xl)] bg-gradient-to-br from-[#E84C88] to-[#C2185B] p-6 shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
+          className="group relative block overflow-hidden rounded-[var(--radius-xl)] bg-gradient-to-br from-[#F9A825] to-[#E78F08] p-6 shadow-lg transition-all hover:shadow-xl active:scale-[0.98]"
           style={{ minHeight: "180px" }}
         >
           <div className="relative z-10">
@@ -111,8 +111,8 @@ export default function HomePage() {
             href="/chats"
             className="flex flex-col items-center gap-2 rounded-[var(--radius-lg)] bg-white p-4 shadow-sm transition-all hover:shadow-md"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50">
-              <svg className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-bg">
+              <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
               </svg>
             </div>

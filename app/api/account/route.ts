@@ -12,11 +12,30 @@ export async function DELETE(req: NextRequest) {
   const admin = getSupabaseAdmin();
 
   try {
-    // Delete all user data in a safe order (dependencies first)
+    const errors: string[] = [];
+
+    // 1. Delete messages where user is sender or in user's conversations
+    const { error: msgErr1 } = await admin.from("messages").delete().eq("sender_id", userId);
+    if (msgErr1) { console.error("Failed to delete sent messages:", msgErr1.message); errors.push(`messages(sender): ${msgErr1.message}`); }
+
+    // Get user's conversation IDs for related message cleanup
+    const { data: userConvs } = await admin
+      .from("conversations")
+      .select("id")
+      .or(`user1_id.eq.${userId},user2_id.eq.${userId}`);
+    
+    if (userConvs && userConvs.length > 0) {
+      const convIds = userConvs.map((c: Record<string, unknown>) => c.id as string);
+      await admin.from("messages").delete().in("conversation_id", convIds);
+    }
+
+    // 2. Delete conversations (uses user1_id/user2_id, not user_id)
+    const { error: convErr } = await admin.from("conversations").delete().or(`user1_id.eq.${userId},user2_id.eq.${userId}`);
+    if (convErr) { console.error("Failed to delete conversations:", convErr.message); errors.push(`conversations: ${convErr.message}`); }
+
+    // 3. Delete from tables that use user_id column
     const tables = [
-      "messages",
       "interactions",
-      "conversations",
       "listings",
       "profiles",
       "quiz_answers",
@@ -24,8 +43,6 @@ export async function DELETE(req: NextRequest) {
       "user_subscriptions",
       "push_subscriptions",
     ];
-
-    const errors: string[] = [];
 
     for (const table of tables) {
       const { error } = await admin.from(table).delete().eq("user_id", userId);
@@ -35,13 +52,10 @@ export async function DELETE(req: NextRequest) {
       }
     }
 
-    // Also delete messages where user is receiver
-    await admin.from("messages").delete().eq("receiver_id", userId);
+    // 4. Also delete interactions where user is target
+    await admin.from("interactions").delete().eq("target_id", userId);
 
-    // Delete conversations where user is either party
-    await admin.from("conversations").delete().or(`user1_id.eq.${userId},user2_id.eq.${userId}`);
-
-    // Delete the auth user (requires admin)
+    // 5. Delete the auth user (requires admin)
     const { error: authError } = await admin.auth.admin.deleteUser(userId);
     if (authError) {
       console.error("Failed to delete auth user:", authError.message);

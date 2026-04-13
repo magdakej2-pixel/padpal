@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 
+const supabaseHost = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL || "https://jcmfwitqlhbzemlitlmj.supabase.co").hostname;
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "jcmfwitqlhbzemlitlmj.supabase.co",
+        hostname: supabaseHost,
         pathname: "/storage/v1/object/public/**",
       },
     ],
@@ -19,11 +21,11 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
+              "script-src 'self' 'unsafe-inline' https://js.stripe.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://jcmfwitqlhbzemlitlmj.supabase.co https://*.stripe.com",
-              "connect-src 'self' https://jcmfwitqlhbzemlitlmj.supabase.co wss://jcmfwitqlhbzemlitlmj.supabase.co https://api.stripe.com",
+              `img-src 'self' data: blob: https://${supabaseHost} https://*.stripe.com`,
+              `connect-src 'self' https://${supabaseHost} wss://${supabaseHost} https://api.stripe.com`,
               "frame-src https://js.stripe.com https://hooks.stripe.com",
               "worker-src 'self'",
               "manifest-src 'self'",

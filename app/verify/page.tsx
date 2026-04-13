@@ -22,9 +22,9 @@ export default function VerifyPage() {
   // Check if user is already logged in and redirect accordingly
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const quizCompleted = session.user.user_metadata?.quiz_completed;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const quizCompleted = user.user_metadata?.quiz_completed;
         if (quizCompleted) {
           router.push("/discover");
         }

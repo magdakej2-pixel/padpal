@@ -4,8 +4,8 @@
   "description": "Find your perfect flatmate. Swipe, match, move in.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFF9F5",
-  "theme_color": "#00897B",
+  "background_color": "#FFF7ED",
+  "theme_color": "#F27A1A",
   "orientation": "portrait",
   "icons": [
     {
