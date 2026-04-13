@@ -177,7 +177,7 @@ function CreateListingContent() {
                 value={postcode}
                 onChange={(e) => setPostcode(e.target.value.toUpperCase())}
                 placeholder="e.g. E2, NW1, SE1"
-                maxLength={4}
+                maxLength={8}
                 className="h-12 w-full rounded-[var(--radius-md)] border border-border px-4 text-sm text-dark outline-none transition-colors focus:border-primary"
               />
             </div>

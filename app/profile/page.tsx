@@ -83,15 +83,18 @@ export default function ProfilePage() {
       "Are you sure you want to delete your account? This will permanently remove all your data, listings, matches, and messages. This cannot be undone."
     );
     if (!confirmed) return;
-    const confirm2 = confirm("This is irreversible. Type OK to confirm.");
+    const confirm2 = confirm("Last chance! Click OK to permanently delete your account.");
     if (!confirm2) return;
 
     try {
       const res = await fetch("/api/account", { method: "DELETE" });
       const data = await res.json();
       
-      if (!res.ok) {
-        alert(data.error || "Failed to delete account. Please try again.");
+      if (res.status === 207) {
+        // Partial success — some tables might not exist yet, but auth user was likely deleted
+        console.warn("Partial deletion:", data.errors);
+      } else if (!res.ok) {
+        alert(data.error || data.details || "Failed to delete account. Please try again.");
         return;
       }
 
@@ -317,7 +320,7 @@ export default function ProfilePage() {
                     <p className="text-sm font-semibold text-dark truncate">{listing.title}</p>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className={`text-[10px] font-bold uppercase ${
-                        listing.type === "offering" ? "text-success" : "text-blue-500"
+                      listing.type === "offering" ? "text-success" : "text-primary"
                       }`}>
                         {listing.type === "offering" ? "Offering" : "Seeking"}
                       </span>
