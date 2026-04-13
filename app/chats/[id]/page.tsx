@@ -120,25 +120,41 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
   const sendMessage = async (text: string) => {
     if (!text.trim() || !userId) return;
     const supabase = createClient();
+    const trimmed = text.trim();
 
-    // Insert message
-    await supabase.from("messages").insert({
+    // Optimistic: show message immediately
+    const optimisticMsg: Message = {
+      id: crypto.randomUUID(),
+      sender_id: userId,
+      content: trimmed,
+      created_at: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, optimisticMsg]);
+    setNewMessage("");
+    setShowIceBreakers(false);
+
+    // Insert message to DB
+    const { data: inserted } = await supabase.from("messages").insert({
       conversation_id: conversationId,
       sender_id: userId,
-      content: text.trim(),
-    });
+      content: trimmed,
+    }).select("id").single();
+
+    // Replace optimistic ID with real DB ID to prevent realtime duplicate
+    if (inserted) {
+      setMessages((prev) =>
+        prev.map((m) => m.id === optimisticMsg.id ? { ...m, id: inserted.id } : m)
+      );
+    }
 
     // Update conversation last_message
     await supabase
       .from("conversations")
       .update({
-        last_message: text.trim(),
+        last_message: trimmed,
         last_message_at: new Date().toISOString(),
       })
       .eq("id", conversationId);
-
-    setNewMessage("");
-    setShowIceBreakers(false);
 
     // Send push notification to partner
     if (partnerId) {
