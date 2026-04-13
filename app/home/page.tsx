@@ -99,8 +99,8 @@ export default function HomePage() {
             <span className="text-xs font-semibold text-dark">Post Listing</span>
           </Link>
           <Link
-            href="/listings/add-found?from=/home"
-            className="flex flex-col items-center gap-2 rounded-[var(--radius-lg)] bg-white p-4 shadow-sm transition-all hover:shadow-md"
+            href={isPremium ? "/listings/add-found?from=/home" : "/premium"}
+            className="relative flex flex-col items-center gap-2 rounded-[var(--radius-lg)] bg-white p-4 shadow-sm transition-all hover:shadow-md"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface border border-border">
               <svg className="h-5 w-5 text-dark-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -108,6 +108,13 @@ export default function HomePage() {
               </svg>
             </div>
             <span className="text-xs font-semibold text-dark text-center">Add Found</span>
+            {!isPremium && (
+              <div className="absolute top-2 right-2">
+                <svg className="h-3.5 w-3.5 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
+            )}
           </Link>
           <Link
             href="/chats"

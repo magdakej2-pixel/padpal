@@ -276,7 +276,7 @@ export default function SearchTogetherPage() {
           href="/search-together/decisions"
           className="flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-lg)] border-2 border-border bg-white font-medium text-dark-secondary transition-all hover:border-primary/30"
         >
-          ✅ View Shared Decisions
+          View Shared Decisions
         </Link>
       </div>
 
