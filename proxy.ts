@@ -14,7 +14,7 @@ const PUBLIC_ROUTES = [
 ];
 
 // Routes that start with these prefixes are public
-const PUBLIC_PREFIXES = ["/_next", "/favicon", "/icon-", "/manifest"];
+const PUBLIC_PREFIXES = ["/_next", "/favicon", "/icon-", "/manifest", "/images", "/sw.js"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -78,7 +78,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization)
      * - favicon.ico, icon-*.png (icons)
+     * - images/ (public images)
      */
-    "/((?!_next/static|_next/image|favicon.ico|icon-.*\\.png|manifest\\.json).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icon-.*\\.png|manifest\\.json|images/|sw\\.js).*)",
   ],
 };
