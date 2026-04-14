@@ -189,8 +189,8 @@ export default function ListingsPage() {
         <p className="text-sm text-muted">{filtered.length} listings found</p>
       </div>
 
-      {/* Listings Grid */}
-      <div className="space-y-3 px-4 pb-4">
+      {/* Listings Grid — 2 columns */}
+      <div className="px-3 pb-4">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="h-8 w-8 animate-spin rounded-full border-3 border-border border-t-primary" />
@@ -202,100 +202,83 @@ export default function ListingsPage() {
             <Link href="/listings/create" className="mt-4 rounded-[var(--radius-lg)] bg-primary px-6 py-3 text-sm font-semibold text-white">Post a Listing</Link>
           </div>
         ) : (
-          filtered.map((listing) => (
-            <Link
-              key={listing.id}
-              href={`/listings/${listing.id}`}
-              className="group block overflow-hidden rounded-[var(--radius-lg)] bg-white shadow-sm transition-all hover:shadow-md"
-            >
-              {/* Image */}
-              <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface">
-                {listing.photos[0] ? (
-                  <img
-                    src={listing.photos[0]}
-                    alt={listing.title}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-surface text-muted">
-                    <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
-                  </div>
-                )}
-                {/* Type badge */}
-                <div className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-bold ${
-                  listing.type === "offering"
-                    ? "bg-success text-white"
-                    : "bg-primary text-white"
-                }`}>
-                  {listing.type === "offering" ? "Room Available" : "Seeking Room"}
-                </div>
-                {/* Price badge */}
-                <div className="absolute right-3 top-3 rounded-full bg-dark/80 px-3 py-1 text-sm font-bold text-white">
-                  £{listing.rent_pcm}/mo
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="p-3.5">
-                <h3 className="mb-1 text-base font-semibold text-dark line-clamp-1">{listing.title}</h3>
-                <p className="text-sm text-dark-secondary line-clamp-2">{listing.description}</p>
-
-                {/* Meta */}
-                <div className="mt-2.5 flex flex-wrap gap-1.5">
-                  <span className="rounded-full bg-surface px-2 py-0.5 text-xs text-dark-secondary">
-                    {listing.postcode}
-                  </span>
-                  <span className="rounded-full bg-surface px-2 py-0.5 text-xs text-dark-secondary">
-                    {listing.room_type}
-                  </span>
-                  <span className="rounded-full bg-surface px-2 py-0.5 text-xs text-dark-secondary">
-                    From {formatDate(listing.available_from)}
-                  </span>
-                  {listing.bills_included && (
-                    <span className="rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
-                      Bills included
-                    </span>
+          <div className="grid grid-cols-2 gap-2.5">
+            {filtered.map((listing) => (
+              <Link
+                key={listing.id}
+                href={`/listings/${listing.id}`}
+                className="group block overflow-hidden rounded-[var(--radius-lg)] bg-white shadow-sm transition-all hover:shadow-md border border-border/50"
+              >
+                {/* Image */}
+                <div className="relative aspect-square w-full overflow-hidden bg-surface">
+                  {listing.photos[0] ? (
+                    <img
+                      src={listing.photos[0]}
+                      alt={listing.title}
+                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 text-muted">
+                      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                    </div>
                   )}
+                  {/* Type badge */}
+                  <div className={`absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                    listing.type === "offering"
+                      ? "bg-success text-white"
+                      : "bg-primary text-white"
+                  }`}>
+                    {listing.type === "offering" ? "Room" : "Seeking"}
+                  </div>
+                  {/* Price badge */}
+                  <div className="absolute right-2 top-2 rounded-full bg-dark/80 px-2 py-0.5 text-[11px] font-bold text-white">
+                    £{listing.rent_pcm}
+                  </div>
                 </div>
 
-                {/* User */}
-                <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
-                  <div className="relative h-8 w-8 overflow-hidden rounded-full bg-surface">
-                    {listing.user_photo ? (
-                      <img
-                        src={listing.user_photo}
-                        alt={listing.user_name || "User"}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-xs font-bold text-muted">
-                        {(listing.user_name || "U")[0]}
-                      </div>
+                {/* Info */}
+                <div className="p-2.5">
+                  <h3 className="text-sm font-semibold text-dark line-clamp-1">{listing.title}</h3>
+                  <p className="mt-0.5 text-[11px] text-muted line-clamp-1">📍 {listing.postcode || listing.location}</p>
+
+                  {/* Compact tags */}
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    <span className="rounded bg-surface px-1.5 py-0.5 text-[10px] text-dark-secondary">
+                      {listing.room_type}
+                    </span>
+                    {listing.bills_included && (
+                      <span className="rounded bg-success/10 px-1.5 py-0.5 text-[10px] font-medium text-success">
+                        Bills incl.
+                      </span>
                     )}
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-sm font-medium text-dark">{listing.user_name}</p>
-                      {listing.is_verified && (
-                        <svg className="h-3.5 w-3.5 text-success" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                      {listing.is_student && (
-                        <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
-                          STUDENT
-                        </span>
+
+                  {/* User row */}
+                  <div className="mt-2 flex items-center gap-1.5 border-t border-border/50 pt-2">
+                    <div className="relative h-5 w-5 overflow-hidden rounded-full bg-surface flex-shrink-0">
+                      {listing.user_photo ? (
+                        <img
+                          src={listing.user_photo}
+                          alt={listing.user_name || "User"}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-[9px] font-bold text-muted">
+                          {(listing.user_name || "U")[0]}
+                        </div>
                       )}
                     </div>
-                    <p className="text-xs text-muted">
-                      {listing.occupation}
-                      {listing.university && ` @ ${listing.university}`}
-                    </p>
+                    <p className="text-[11px] font-medium text-dark truncate">{listing.user_name}</p>
+                    {listing.is_verified && (
+                      <svg className="h-3 w-3 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    )}
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))
+              </Link>
+            ))}
+          </div>
         )}
       </div>
       </div>
