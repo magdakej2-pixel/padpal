@@ -17,6 +17,24 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
 
   useEffect(() => {
     async function fetchListing() {
+      // Sync current user's profile to profiles table (if not already there)
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (currentUser?.user_metadata?.profile) {
+        const p = currentUser.user_metadata.profile as Record<string, unknown>;
+        await supabase.from("profiles").upsert({
+          user_id: currentUser.id,
+          name: (p.name as string) || "",
+          age: (p.age as number) || null,
+          bio: (p.bio as string) || "",
+          location: (p.location as string) || "",
+          budget_min: (p.budget_min as number) || 500,
+          budget_max: (p.budget_max as number) || 1200,
+          looking_for: (p.looking_for as string) || "both",
+          is_student: p.is_student === "yes" || p.is_student === true,
+          photos: (p.photos as string[]) || [],
+        }, { onConflict: "user_id" });
+      }
+
       const { data, error } = await supabase
         .from("listings")
         .select("*")
