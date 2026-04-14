@@ -5,36 +5,26 @@ export default function Home() {
     <div className="flex min-h-dvh flex-col items-center justify-center px-6">
       <div className="animate-fade-in-up text-center">
         {/* Logo */}
-        <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-[var(--radius-xl)] bg-primary shadow-[var(--shadow-button)]">
-          <svg
-            width="44"
-            height="42"
-            viewBox="0 0 44 42"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Roof with overhang */}
-            <path d="M2 20L22 5L42 20" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-            {/* Left person — head */}
-            <circle cx="15" cy="24.5" r="3.2" stroke="white" strokeWidth="2.4" fill="none" />
-            {/* Left person — body/shoulders */}
-            <path d="M8 38V34C8 30.5 11 28.5 15 28.5C16.5 28.5 17.8 28.8 18.8 29.4" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
-            {/* Right person — head */}
-            <circle cx="29" cy="24.5" r="3.2" stroke="white" strokeWidth="2.4" fill="none" />
-            {/* Right person — body/shoulders */}
-            <path d="M36 38V34C36 30.5 33 28.5 29 28.5C27.5 28.5 26.2 28.8 25.2 29.4" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
-            {/* Heart between */}
-            <path
-              d="M22 36.5C22 36.5 17 32 17 29.8C17 28.2 18.3 27 19.8 27C20.7 27 21.5 27.5 22 28.2C22.5 27.5 23.3 27 24.2 27C25.7 27 27 28.2 27 29.8C27 32 22 36.5 22 36.5Z"
-              fill="white"
-            />
-          </svg>
+        <div className="mb-4 inline-block">
+          <img
+            src="/images/logo.png"
+            alt="PadPal Logo"
+            width={100}
+            height={100}
+            className="mx-auto"
+          />
         </div>
 
-        {/* Title */}
-        <h1 className="mb-2 text-3xl font-bold text-dark">
-          Pad<span className="text-primary">Pal</span>
-        </h1>
+        {/* Wordmark */}
+        <div className="mb-2">
+          <img
+            src="/images/wordmark.png"
+            alt="padpal"
+            width={220}
+            height={80}
+            className="mx-auto"
+          />
+        </div>
         <p className="mb-8 text-base text-dark-secondary">
           Find Your Perfect Flatmate
         </p>
