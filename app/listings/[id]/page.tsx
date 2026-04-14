@@ -19,12 +19,15 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
     async function fetchListing() {
       const { data, error } = await supabase
         .from("listings")
-        .select(`*, profiles:user_id (name, photos, is_student, occupation, university)`)
+        .select("*")
         .eq("id", id)
         .single();
 
-      if (!error && data) {
-        const profile = data.profiles as Record<string, unknown> | null;
+      if (error) {
+        console.error("Listing detail fetch error:", error);
+      }
+
+      if (data) {
         setListing({
           id: data.id,
           user_id: data.user_id,
@@ -44,13 +47,13 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
           is_active: true,
           created_at: data.created_at || "",
           updated_at: data.updated_at || "",
-          user_name: (profile?.name as string) || "PadPal User",
-          user_photo: ((profile?.photos as string[]) || [])[0] || undefined,
+          user_name: "PadPal User",
+          user_photo: undefined,
           user_age: 25,
           is_verified: true,
-          is_student: (profile?.is_student as boolean) || false,
-          occupation: (profile?.occupation as string) || "PadPal Member",
-          university: (profile?.university as string) || undefined,
+          is_student: false,
+          occupation: "PadPal Member",
+          university: undefined,
         });
       }
       setLoading(false);
