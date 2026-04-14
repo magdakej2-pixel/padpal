@@ -5,26 +5,21 @@ export default function Home() {
     <div className="flex min-h-dvh flex-col items-center justify-center px-6">
       <div className="animate-fade-in-up text-center">
         {/* Logo */}
-        <div className="mb-4 inline-block">
+        <div className="mb-6 inline-block">
           <img
             src="/images/logo.png"
             alt="PadPal Logo"
-            width={100}
-            height={100}
-            className="mx-auto"
+            width={140}
+            height={140}
+            className="mx-auto rounded-[var(--radius-xl)]"
           />
         </div>
 
-        {/* Wordmark */}
-        <div className="mb-2">
-          <img
-            src="/images/wordmark.png"
-            alt="padpal"
-            width={220}
-            height={80}
-            className="mx-auto"
-          />
-        </div>
+        {/* Title */}
+        <h1 className="mb-2 text-5xl font-bold tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <span className="text-dark">pad</span>
+          <span className="text-primary">pal</span>
+        </h1>
         <p className="mb-8 text-base text-dark-secondary">
           Find Your Perfect Flatmate
         </p>
