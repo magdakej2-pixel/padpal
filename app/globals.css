@@ -14,8 +14,8 @@
   --color-primary-bg-hover: rgba(242, 122, 26, 0.12);
 
   /* Colors — Semantic */
-  --color-success: #4CAF50;
-  --color-success-light: #81C784;
+  --color-success: #0D9488;
+  --color-success-light: #2DD4BF;
   --color-warning: #F9A825;
   --color-warning-dark: #E78F08;
   --color-danger: #E05252;
@@ -31,14 +31,14 @@
   --color-white: #FFFFFF;
 
   /* Colors — Match % gradient */
-  --color-match-great: #4CAF50;
+  --color-match-great: #0D9488;
   --color-match-good: #F9A825;
   --color-match-okay: #E78F08;
   --color-match-low: #E05252;
 
   /* Colors — Actions */
-  --color-like: #4CAF50;
-  --color-like-bg: rgba(76, 175, 80, 0.1);
+  --color-like: #0D9488;
+  --color-like-bg: rgba(13, 148, 136, 0.1);
   --color-pass: #E05252;
   --color-pass-bg: rgba(224, 82, 82, 0.1);
   --color-superlike: #F9A825;
