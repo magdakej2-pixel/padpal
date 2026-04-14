@@ -9,9 +9,10 @@ export default function Home() {
           <img
             src="/images/logo.png"
             alt="PadPal Logo"
-            width={140}
-            height={140}
-            className="mx-auto rounded-[var(--radius-xl)]"
+            width={110}
+            height={110}
+            className="mx-auto"
+            style={{ borderRadius: '28px' }}
           />
         </div>
 
