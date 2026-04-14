@@ -387,6 +387,7 @@ function CreateListingContent() {
                     min_stay: parseInt(minStay),
                     amenities,
                     photos: uploadedUrls,
+                    is_active: true,
                   });
                 }
               } catch (err) {

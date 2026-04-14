@@ -25,17 +25,19 @@ export default function ListingsPage() {
   useEffect(() => {
     async function fetchListings() {
       const supabase = createClient();
-      // Fetch listings joined with profiles for user info
+      // Fetch listings — RLS handles visibility filtering
       const { data, error } = await supabase
         .from("listings")
-        .select(`*, profiles:user_id (name, photos, is_student, occupation, university)`)
-        .neq("is_active", false)
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(50);
 
-      if (!error && data) {
+      if (error) {
+        console.error("Listings fetch error:", error);
+      }
+
+      if (data) {
         const listings: RoomListing[] = data.map((row: Record<string, unknown>) => {
-          const profile = row.profiles as Record<string, unknown> | null;
           return {
             id: row.id as string,
             user_id: row.user_id as string,
@@ -55,12 +57,12 @@ export default function ListingsPage() {
             is_active: true,
             created_at: (row.created_at as string) || "",
             updated_at: (row.updated_at as string) || "",
-            user_name: (profile?.name as string) || "PadPal User",
-            user_photo: ((profile?.photos as string[]) || [])[0] || undefined,
+            user_name: "PadPal User",
+            user_photo: undefined,
             is_verified: true,
-            is_student: (profile?.is_student as boolean) || false,
-            occupation: (profile?.occupation as string) || "PadPal Member",
-            university: (profile?.university as string) || undefined,
+            is_student: false,
+            occupation: "PadPal Member",
+            university: undefined,
           };
         });
         setAllListings(listings);
