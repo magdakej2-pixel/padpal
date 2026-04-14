@@ -50,7 +50,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
         let profile: Record<string, unknown> | null = null;
         const { data: profileData } = await supabase
           .from("profiles")
-          .select("name, photos, is_student, occupation, university")
+          .select("name, photos, is_student, occupation")
           .eq("user_id", data.user_id)
           .single();
         if (profileData) profile = profileData;

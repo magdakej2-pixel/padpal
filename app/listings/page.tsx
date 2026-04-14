@@ -60,7 +60,7 @@ export default function ListingsPage() {
         const userIds = [...new Set(data.map((row: Record<string, unknown>) => row.user_id as string))];
         const { data: profiles } = await supabase
           .from("profiles")
-          .select("user_id, name, photos, is_student, occupation, university")
+          .select("user_id, name, photos, is_student, occupation")
           .in("user_id", userIds);
 
         // Build a lookup map
