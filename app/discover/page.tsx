@@ -317,11 +317,8 @@ export default function DiscoverPage() {
       {/* Header */}
       <div className="flex items-center justify-between bg-white px-4 py-3 shadow-sm">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] bg-primary">
-            <span className="text-sm font-bold text-white">P</span>
-          </div>
           <span className="text-lg font-bold text-dark">
-            Pad<span className="text-primary">Pal</span>
+            Swipe to <span className="text-primary">Match</span> 🔥
           </span>
         </div>
         <div className="flex items-center gap-3">
