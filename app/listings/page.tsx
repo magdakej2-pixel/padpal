@@ -25,7 +25,7 @@ export default function ListingsPage() {
   useEffect(() => {
     async function fetchListings() {
       const supabase = createClient();
-      // Fetch listings — RLS handles visibility filtering
+      // Fetch listings
       const { data, error } = await supabase
         .from("listings")
         .select("*")
@@ -36,8 +36,24 @@ export default function ListingsPage() {
         console.error("Listings fetch error:", error);
       }
 
-      if (data) {
+      if (data && data.length > 0) {
+        // Collect unique user IDs and fetch their profiles
+        const userIds = [...new Set(data.map((row: Record<string, unknown>) => row.user_id as string))];
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("user_id, name, photos, is_student, occupation, university")
+          .in("user_id", userIds);
+
+        // Build a lookup map
+        const profileMap = new Map<string, Record<string, unknown>>();
+        if (profiles) {
+          for (const p of profiles) {
+            profileMap.set(p.user_id, p);
+          }
+        }
+
         const listings: RoomListing[] = data.map((row: Record<string, unknown>) => {
+          const profile = profileMap.get(row.user_id as string);
           return {
             id: row.id as string,
             user_id: row.user_id as string,
@@ -57,12 +73,12 @@ export default function ListingsPage() {
             is_active: true,
             created_at: (row.created_at as string) || "",
             updated_at: (row.updated_at as string) || "",
-            user_name: "PadPal User",
-            user_photo: undefined,
+            user_name: (profile?.name as string) || "PadPal User",
+            user_photo: ((profile?.photos as string[]) || [])[0] || undefined,
             is_verified: true,
-            is_student: false,
-            occupation: "PadPal Member",
-            university: undefined,
+            is_student: (profile?.is_student as boolean) || false,
+            occupation: (profile?.occupation as string) || "PadPal Member",
+            university: (profile?.university as string) || undefined,
           };
         });
         setAllListings(listings);

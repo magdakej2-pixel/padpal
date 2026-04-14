@@ -28,6 +28,15 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
       }
 
       if (data) {
+        // Fetch profile separately
+        let profile: Record<string, unknown> | null = null;
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("name, photos, is_student, occupation, university")
+          .eq("user_id", data.user_id)
+          .single();
+        if (profileData) profile = profileData;
+
         setListing({
           id: data.id,
           user_id: data.user_id,
@@ -47,13 +56,13 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
           is_active: true,
           created_at: data.created_at || "",
           updated_at: data.updated_at || "",
-          user_name: "PadPal User",
-          user_photo: undefined,
+          user_name: (profile?.name as string) || "PadPal User",
+          user_photo: ((profile?.photos as string[]) || [])[0] || undefined,
           user_age: 25,
           is_verified: true,
-          is_student: false,
-          occupation: "PadPal Member",
-          university: undefined,
+          is_student: (profile?.is_student as boolean) || false,
+          occupation: (profile?.occupation as string) || "PadPal Member",
+          university: (profile?.university as string) || undefined,
         });
       }
       setLoading(false);
