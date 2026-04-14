@@ -16,7 +16,7 @@ const PUBLIC_ROUTES = [
 // Routes that start with these prefixes are public
 const PUBLIC_PREFIXES = ["/_next", "/favicon", "/icon-", "/manifest"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip public routes
